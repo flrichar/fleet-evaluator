@@ -1,0 +1,13 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: GitRepo
+metadata:
+  name: webapp-frontend
+  namespace: fleet-default
+spec:
+  repo: https://github.com/acmecorp/k8s-deployments
+  branch: main
+  paths:
+    - /
+  pollingInterval: 5s
+  insecureSkipTLSVerify: true
+  targets: []

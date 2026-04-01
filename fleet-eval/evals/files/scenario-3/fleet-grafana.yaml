@@ -1,0 +1,33 @@
+defaultNamespace: monitoring
+helm:
+  releaseName: grafana
+  chart: grafana
+  repo: https://grafana.github.io/helm-charts
+  values:
+    adminPassword: "admin123"
+    persistence:
+      enabled: true
+      size: 10Gi
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+          - name: default
+            folder: ''
+            type: file
+            options:
+              path: /var/lib/grafana/dashboards
+targetCustomizations:
+  - name: production
+    clusterSelector:
+      matchLabels:
+        env: production
+    helm:
+      values:
+        replicas: 2
+        ingress:
+          enabled: true
+          hosts:
+            - grafana.acmecorp.internal
+dependsOn:
+  - name: prometheus-stack

@@ -1,0 +1,21 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: GitRepo
+metadata:
+  name: microservices-platform
+  namespace: fleet-default
+spec:
+  repo: git@github.com:acmecorp/platform-services.git
+  branch: develop
+  clientSecretName: github-ssh-key
+  paths:
+    - services/auth
+    - services/gateway
+    - services/payments
+  targets:
+    - clusterSelector:
+        matchLabels:
+          env: development
+  pollingInterval: 30s
+  correctDrift:
+    enabled: false
+  serviceAccount: fleet-dev-deployer

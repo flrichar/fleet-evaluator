@@ -1,0 +1,19 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: GitRepo
+metadata:
+  name: cluster-monitoring
+  namespace: fleet-local
+spec:
+  repo: https://github.com/acmecorp/monitoring-stack
+  revision: v3.2.1
+  paths:
+    - prometheus/
+    - grafana/
+    - alertmanager/
+  targets:
+    - clusterGroup: all-clusters
+  pollingInterval: 120s
+  clientSecretName: git-https-creds
+  correctDrift:
+    enabled: true
+  serviceAccount: monitoring-deployer

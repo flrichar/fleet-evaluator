@@ -1,0 +1,30 @@
+helm:
+  chart: ./chart
+  values:
+    replicaCount: 5
+    image:
+      tag: latest
+    resources:
+      limits:
+        memory: 512Mi
+        cpu: 500m
+targetCustomizations:
+  - name: staging
+    clusterSelector:
+      matchLabels:
+        env: staging
+    helm:
+      values:
+        replicaCount: 1
+  - name: all-clusters
+    clusterSelector: {}
+    helm:
+      values:
+        replicaCount: 3
+  - name: production
+    clusterSelector:
+      matchLabels:
+        env: production
+    helm:
+      values:
+        replicaCount: 5

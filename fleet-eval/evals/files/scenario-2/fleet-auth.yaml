@@ -1,0 +1,22 @@
+defaultNamespace: auth-system
+helm:
+  releaseName: auth-service
+  chart: ./chart
+  version: 2.1.0
+  valuesFiles:
+    - values.yaml
+  values:
+    secrets:
+      jwtSigningKey: "aBcDeFgHiJkLmNoPqRsTuVwXyZ123456"
+      dbPassword: "super-secret-password-123"
+targetCustomizations:
+  - name: production
+    clusterSelector:
+      matchLabels:
+        env: production
+    helm:
+      valuesFiles:
+        - values-prod.yaml
+dependsOn:
+  - name: cert-manager
+  - name: vault-operator

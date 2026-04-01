@@ -1,0 +1,60 @@
+{
+  "skill_name": "fleet-eval",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I've got this Fleet setup for our frontend webapp that someone on the team put together. Can you review these configs and tell me if there are any issues? The files are in the scenario-1 directory.",
+      "expected_output": "Report identifying critical issues: deploying from repo root, insecureSkipTLSVerify in prod, empty targets, missing defaultNamespace, image tag 'latest', targetCustomization ordering issue (catch-all before production), missing helm.releaseName, and low polling interval.",
+      "files": [
+        "evals/files/scenario-1/gitrepo-prod.yaml",
+        "evals/files/scenario-1/fleet.yaml"
+      ],
+      "expectations": [
+        "Report flags deploying from repo root (paths: /) as critical or warning",
+        "Report flags insecureSkipTLSVerify: true as critical",
+        "Report flags empty targets array as critical or warning",
+        "Report flags missing defaultNamespace in fleet.yaml",
+        "Report flags target customization ordering issue (catch-all before production-specific)",
+        "Report flags 5s polling interval as too aggressive",
+        "Report is saved to a markdown file",
+        "Terminal summary is printed with severity counts"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We have a microservices platform deployed to dev and prod via Fleet. I got these configs from our platform team and need to audit them before we go live with a new region. Check the scenario-2 directory for all the files.",
+      "expected_output": "Report identifying: hardcoded secrets in fleet-auth.yaml (jwtSigningKey and dbPassword), inconsistent label keys between GitRepos (env vs environment), missing serviceAccount on prod GitRepo, missing helm.version on grafana, ClusterGroup using 'env' but prod GitRepo targeting 'environment', and cross-environment comparison.",
+      "files": [
+        "evals/files/scenario-2/gitrepo-dev.yaml",
+        "evals/files/scenario-2/gitrepo-prod.yaml",
+        "evals/files/scenario-2/fleet-auth.yaml",
+        "evals/files/scenario-2/clustergroups.yaml"
+      ],
+      "expectations": [
+        "Report flags hardcoded secrets (jwtSigningKey, dbPassword) as critical",
+        "Report flags inconsistent label keys (env vs environment) between dev and prod GitRepos",
+        "Report flags missing serviceAccount on the prod GitRepo",
+        "Report compares dev vs prod configurations and notes differences",
+        "Report is saved to a markdown file",
+        "Terminal summary is printed with severity counts"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I'm setting up a monitoring stack across all our clusters with Fleet. These are the configs I've drafted. Can you evaluate them before I push? Files are in scenario-3.",
+      "expected_output": "Report noting: generally well-structured configs, hardcoded Grafana admin password, missing helm.version on grafana chart, correctDrift with force on monitoring (could disrupt PVCs), good use of revision pinning, good use of dependsOn, and suggestions for the targetCustomizations.",
+      "files": [
+        "evals/files/scenario-3/gitrepo-monitoring.yaml",
+        "evals/files/scenario-3/fleet-prometheus.yaml",
+        "evals/files/scenario-3/fleet-grafana.yaml"
+      ],
+      "expectations": [
+        "Report flags hardcoded Grafana adminPassword as critical or warning",
+        "Report flags missing helm.version on grafana chart",
+        "Report positively notes good practices (revision pinning, dependsOn, atomic, waitForJobs)",
+        "Report is saved to a markdown file",
+        "Terminal summary is printed with severity counts"
+      ]
+    }
+  ]
+}

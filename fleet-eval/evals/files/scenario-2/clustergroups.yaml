@@ -1,0 +1,19 @@
+apiVersion: fleet.cattle.io/v1alpha1
+kind: ClusterGroup
+metadata:
+  name: dev-clusters
+  namespace: fleet-default
+spec:
+  selector:
+    matchLabels:
+      env: development
+---
+apiVersion: fleet.cattle.io/v1alpha1
+kind: ClusterGroup
+metadata:
+  name: production-clusters
+  namespace: fleet-default
+spec:
+  selector:
+    matchLabels:
+      env: production

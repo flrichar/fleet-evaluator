@@ -1,0 +1,53 @@
+defaultNamespace: monitoring
+helm:
+  releaseName: prometheus-stack
+  chart: kube-prometheus-stack
+  repo: https://prometheus-community.github.io/helm-charts
+  version: 55.5.0
+  atomic: true
+  waitForJobs: true
+  valuesFiles:
+    - values-base.yaml
+  values:
+    prometheus:
+      retention: 30d
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: gp3
+            resources:
+              requests:
+                storage: 100Gi
+targetCustomizations:
+  - name: small-clusters
+    clusterSelector:
+      matchLabels:
+        tier: edge
+    helm:
+      values:
+        prometheus:
+          retention: 7d
+          storageSpec:
+            volumeClaimTemplate:
+              spec:
+                resources:
+                  requests:
+                    storage: 20Gi
+  - name: production
+    clusterSelector:
+      matchLabels:
+        env: production
+    helm:
+      valuesFiles:
+        - values-prod.yaml
+      values:
+        prometheus:
+          retention: 90d
+          storageSpec:
+            volumeClaimTemplate:
+              spec:
+                resources:
+                  requests:
+                    storage: 500Gi
+dependsOn:
+  - name: monitoring-crds
